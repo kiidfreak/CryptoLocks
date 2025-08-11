@@ -8,20 +8,37 @@ import {
   Sun,
   Menu,
   X,
-  Wallet
+  Wallet,
+  Copy,
+  ExternalLink,
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useWallet } from '@/hooks/useWallet';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { NETWORKS } from '@/lib/constants';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  onViewChange?: (view: 'dashboard' | 'locks' | 'create' | 'settings') => void;
+  onViewChange?: (view: 'dashboard' | 'locks' | 'create' | 'transactions' | 'settings') => void;
   currentView?: string;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onViewChange, currentView = 'dashboard' }) => {
   const [isDark, setIsDark] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { 
+    address, 
+    balance, 
+    usdtBalance, 
+    network, 
+    isConnected, 
+    isConnecting, 
+    connect, 
+    disconnect,
+    isMetaMaskInstalled 
+  } = useWallet();
   const { toast } = useToast();
 
   const toggleTheme = () => {
@@ -33,18 +50,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
     });
   };
 
-  const handleConnectWallet = () => {
-    toast({
-      title: "Wallet Connection",
-      description: "Opening wallet connection dialog...",
-    });
-    // Add actual wallet connection logic here
+  const handleConnectWallet = async () => {
+    try {
+      await connect();
+    } catch (error) {
+      // Error is already handled in the hook
+    }
   };
 
   const sidebarItems = [
     { icon: LayoutDashboard, label: 'Dashboard', view: 'dashboard' as const },
     { icon: Lock, label: 'Lock Management', view: 'locks' as const },
     { icon: Plus, label: 'Create Lock', view: 'create' as const },
+    { icon: Clock, label: 'Transactions', view: 'transactions' as const },
     { icon: Settings, label: 'Settings', view: 'settings' as const },
   ];
 
@@ -72,15 +90,39 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
           </div>
 
           <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="hidden sm:flex"
-              onClick={handleConnectWallet}
-            >
-              <Wallet className="h-4 w-4 mr-2" />
-              Connect Wallet
-            </Button>
+            {!isConnected ? (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="hidden sm:flex"
+                onClick={handleConnectWallet}
+                disabled={!isMetaMaskInstalled || isConnecting}
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                {!isMetaMaskInstalled ? 'Install MetaMask' : isConnecting ? 'Connecting...' : 'Connect Wallet'}
+              </Button>
+            ) : (
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex items-center gap-2 text-sm">
+                  <Badge variant="outline" className="text-xs">
+                    {network?.name || 'Unknown Network'}
+                  </Badge>
+                  <span className="text-muted-foreground">
+                    {parseFloat(balance).toFixed(4)} {network?.currency}
+                  </span>
+                  <span className="text-muted-foreground">
+                    ${parseFloat(usdtBalance).toFixed(2)} USDT
+                  </span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={disconnect}
+                >
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                </Button>
+              </div>
+            )}
             
             <Button
               variant="ghost"
@@ -126,27 +168,31 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
           </div>
 
           {/* Sidebar stats */}
-          <div className="p-6 mt-8">
-            <div className="glass-card p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                Portfolio Overview
-              </h3>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Total Locked</span>
-                  <span className="font-mono">$2,450,000</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Active Locks</span>
-                  <span className="font-mono text-success">12</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Expiring Soon</span>
-                  <span className="font-mono text-warning">3</span>
+          {isConnected && (
+            <div className="p-6 mt-8">
+              <div className="glass-card p-4 rounded-lg">
+                <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                  Wallet Overview
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Network</span>
+                    <Badge variant="outline" className="text-xs">
+                      {network?.name || 'Unknown'}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>{network?.currency || 'BNB'}</span>
+                    <span className="font-mono">{parseFloat(balance).toFixed(4)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>USDT</span>
+                    <span className="font-mono text-success">${parseFloat(usdtBalance).toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </aside>
 
         {/* Main Content */}

@@ -155,35 +155,72 @@ export const LockManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">Lock Management</h2>
-          <p className="text-muted-foreground">Manage and monitor your USDT locks</p>
+      {/* Enhanced Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/10 to-purple-500/5 p-8 border border-primary/20">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+              <Calendar className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Lock Management
+              </h2>
+              <p className="text-lg text-muted-foreground mt-1">Secure • Organized • Professional Asset Control</p>
+            </div>
+          </div>
+          <p className="text-muted-foreground text-lg max-w-2xl">
+            Monitor and manage all your USDT time-locks in one centralized dashboard. 
+            Track expiry dates, transfer history, and lock status with real-time updates.
+          </p>
+          
+          <div className="flex gap-3 mt-6">
+            <Button className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white hover:shadow-lg hover:shadow-primary/25 transition-all duration-300">
+              <Calendar className="h-4 w-4 mr-2" />
+              Create New Lock
+            </Button>
+            <Button variant="outline" className="hover:bg-primary hover:text-white transition-colors">
+              <Filter className="h-4 w-4 mr-2" />
+              Advanced Filters
+            </Button>
+          </div>
         </div>
-        
-        <Button className="gradient-primary text-white hover:opacity-90">
-          <Calendar className="h-4 w-4 mr-2" />
-          Create New Lock
-        </Button>
       </div>
 
-      {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by recipient, amount, or status..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+      {/* Enhanced Search and Filters */}
+      <div className="glass-card p-6 rounded-xl border border-border">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by recipient, amount, or status..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 h-12 text-base border-2 border-border focus:border-primary transition-colors"
+            />
+          </div>
+          
+          <Button variant="outline" className="gap-2 h-12 px-6 hover:bg-primary hover:text-white transition-colors">
+            <Filter className="h-4 w-4" />
+            Advanced Filters
+          </Button>
         </div>
         
-        <Button variant="outline" className="gap-2">
-          <Filter className="h-4 w-4" />
-          Filters
-        </Button>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-primary hover:text-white transition-colors">
+            All Locks ({mockLocks.length})
+          </Badge>
+          <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-success hover:text-white transition-colors">
+            Active ({mockLocks.filter(l => l.status === 'active').length})
+          </Badge>
+          <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-warning hover:text-white transition-colors">
+            Expiring ({mockLocks.filter(l => l.status === 'expiring').length})
+          </Badge>
+          <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-destructive hover:text-white transition-colors">
+            Expired ({mockLocks.filter(l => l.status === 'expired').length})
+          </Badge>
+        </div>
       </div>
 
       {/* Table */}

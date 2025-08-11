@@ -1,197 +1,85 @@
 import React, { useState } from 'react';
-import { 
-  User, 
-  Wallet, 
-  Shield, 
-  Bell, 
-  Moon, 
-  Sun,
-  Key,
-  Save,
-  Eye,
-  EyeOff
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Settings as SettingsIcon, Network, Shield, Bell, Palette, Download } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useWallet } from '@/hooks/useWallet';
+import { NETWORKS } from '@/lib/constants';
 
 export const Settings: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
-  const [showApiKey, setShowApiKey] = useState(false);
-  const [notifications, setNotifications] = useState({
-    email: true,
-    browser: false,
-    lockExpiry: true,
-    priceAlerts: false,
-  });
-  const [profile, setProfile] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
-    apiKey: 'fv_sk_1234567890abcdef1234567890abcdef',
-  });
-  const { toast } = useToast();
+  const { network, switchNetwork } = useWallet();
+  const [notifications, setNotifications] = useState(true);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState(network?.chainId.toString() || '97');
 
-  const handleSaveProfile = () => {
-    toast({
-      title: "Profile Updated",
-      description: "Your profile settings have been saved successfully.",
-    });
+  const handleNetworkChange = async (chainId: string) => {
+    try {
+      await switchNetwork(parseInt(chainId));
+      setSelectedNetwork(chainId);
+    } catch (error) {
+      console.error('Failed to switch network:', error);
+    }
   };
 
-  const handleSaveSecurity = () => {
-    toast({
-      title: "Security Settings Updated", 
-      description: "Your security preferences have been saved.",
-    });
-  };
-
-  const handleToggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
-    toast({
-      title: "Theme Changed",
-      description: `Switched to ${!isDark ? 'dark' : 'light'} mode.`,
-    });
-  };
-
-  const generateNewApiKey = () => {
-    const newKey = 'fv_sk_' + Math.random().toString(36).substring(2, 34);
-    setProfile(prev => ({ ...prev, apiKey: newKey }));
-    toast({
-      title: "New API Key Generated",
-      description: "Your API key has been regenerated. Update your applications.",
-      variant: "destructive",
-    });
+  const exportData = () => {
+    // Export user data functionality
+    const data = {
+      timestamp: new Date().toISOString(),
+      network: network?.name,
+      settings: {
+        notifications,
+        autoRefresh,
+        darkMode
+      }
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'flashvault-settings.json';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground">Settings</h2>
-        <p className="text-muted-foreground">Manage your account preferences and security settings</p>
+        <p className="text-muted-foreground">Configure your FlashVault experience</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Profile Settings */}
+        {/* Network Settings */}
         <Card className="glass-card border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5 text-primary" />
-              Profile Settings
+              <Network className="h-5 w-5 text-primary" />
+              Network Configuration
             </CardTitle>
             <CardDescription>
-              Update your personal information and preferences
+              Choose your preferred blockchain network
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                value={profile.name}
-                onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={profile.email}
-                onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))}
-              />
-            </div>
-
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">
-                  Toggle between light and dark themes
-                </p>
-              </div>
-              <Switch
-                checked={isDark}
-                onCheckedChange={handleToggleTheme}
-              />
-            </div>
-
-            <Button onClick={handleSaveProfile} className="w-full">
-              <Save className="h-4 w-4 mr-2" />
-              Save Profile
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Security Settings */}
-        <Card className="glass-card border-border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
-              Security & API
-            </CardTitle>
-            <CardDescription>
-              Manage your security preferences and API access
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>API Key</Label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    type={showApiKey ? "text" : "password"}
-                    value={profile.apiKey}
-                    readOnly
-                    className="font-mono text-sm pr-10"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
-                    onClick={() => setShowApiKey(!showApiKey)}
-                  >
-                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
+              <Label htmlFor="network">Default Network</Label>
+              <Select value={selectedNetwork} onValueChange={handleNetworkChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select network" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="97">BSC Testnet</SelectItem>
+                  <SelectItem value="56">BSC Mainnet</SelectItem>
+                </SelectContent>
+              </Select>
               <p className="text-xs text-muted-foreground">
-                Used for programmatic access to FlashVault API
+                Current: {network?.name || 'Not connected'}
               </p>
             </div>
-
-            <Button 
-              variant="outline" 
-              onClick={generateNewApiKey}
-              className="w-full"
-            >
-              <Key className="h-4 w-4 mr-2" />
-              Generate New API Key
-            </Button>
-
-            <Separator />
-
-            <div className="space-y-4">
-              <Label>Two-Factor Authentication</Label>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium">Enable 2FA</p>
-                  <p className="text-sm text-muted-foreground">Add extra security to your account</p>
-                </div>
-                <Switch />
-              </div>
-            </div>
-
-            <Button onClick={handleSaveSecurity} className="w-full">
-              <Save className="h-4 w-4 mr-2" />
-              Save Security Settings
-            </Button>
           </CardContent>
         </Card>
 
@@ -203,106 +91,134 @@ export const Settings: React.FC = () => {
               Notifications
             </CardTitle>
             <CardDescription>
-              Configure how you want to receive updates
+              Manage your notification preferences
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Email Notifications</p>
-                <p className="text-sm text-muted-foreground">Receive updates via email</p>
+              <div className="space-y-0.5">
+                <Label>Push Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Get notified about lock events
+                </p>
               </div>
               <Switch
-                checked={notifications.email}
-                onCheckedChange={(checked) => 
-                  setNotifications(prev => ({ ...prev, email: checked }))
-                }
+                checked={notifications}
+                onCheckedChange={setNotifications}
               />
             </div>
-
+            
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Browser Notifications</p>
-                <p className="text-sm text-muted-foreground">Push notifications in browser</p>
+              <div className="space-y-0.5">
+                <Label>Auto Refresh</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically update data every 30s
+                </p>
               </div>
               <Switch
-                checked={notifications.browser}
-                onCheckedChange={(checked) => 
-                  setNotifications(prev => ({ ...prev, browser: checked }))
-                }
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Lock Expiry Alerts</p>
-                <p className="text-sm text-muted-foreground">Get notified before locks expire</p>
-              </div>
-              <Switch
-                checked={notifications.lockExpiry}
-                onCheckedChange={(checked) => 
-                  setNotifications(prev => ({ ...prev, lockExpiry: checked }))
-                }
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Price Alerts</p>
-                <p className="text-sm text-muted-foreground">USDT price movement notifications</p>
-              </div>
-              <Switch
-                checked={notifications.priceAlerts}
-                onCheckedChange={(checked) => 
-                  setNotifications(prev => ({ ...prev, priceAlerts: checked }))
-                }
+                checked={autoRefresh}
+                onCheckedChange={setAutoRefresh}
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Wallet Connection */}
+        {/* Appearance Settings */}
         <Card className="glass-card border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-primary" />
-              Wallet Connection
+              <Palette className="h-5 w-5 text-primary" />
+              Appearance
             </CardTitle>
             <CardDescription>
-              Manage your connected wallets and blockchain settings
+              Customize the look and feel
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-muted/30 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Status</span>
-                <span className="text-sm text-destructive">Disconnected</span>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Dark Mode</Label>
+                <p className="text-sm text-muted-foreground">
+                  Use dark theme
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Connect your wallet to interact with smart contracts
-              </p>
+              <Switch
+                checked={darkMode}
+                onCheckedChange={setDarkMode}
+              />
             </div>
+          </CardContent>
+        </Card>
 
+        {/* Security Settings */}
+        <Card className="glass-card border-border">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              Security
+            </CardTitle>
+            <CardDescription>
+              Manage your security preferences
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Preferred Network</Label>
-              <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                <div className="w-3 h-3 bg-warning rounded-full" />
-                <span className="text-sm font-medium">BSC Testnet</span>
-                <span className="text-xs text-muted-foreground ml-auto">Chain ID: 97</span>
+              <Label>Transaction Confirmation</Label>
+              <p className="text-sm text-muted-foreground">
+                Always require confirmation for transactions
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Require 2FA for large amounts</span>
+                <Switch defaultChecked />
               </div>
             </div>
-
-            <Button variant="crypto" className="w-full">
-              <Wallet className="h-4 w-4 mr-2" />
-              Connect Wallet
-            </Button>
-
-            <p className="text-xs text-muted-foreground text-center">
-              Supports MetaMask, WalletConnect, and other Web3 wallets
-            </p>
           </CardContent>
         </Card>
       </div>
+
+      {/* Data Management */}
+      <Card className="glass-card border-border">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Download className="h-5 w-5 text-primary" />
+            Data Management
+          </CardTitle>
+          <CardDescription>
+            Export your data and manage preferences
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-4">
+            <Button variant="outline" onClick={exportData}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Settings
+            </Button>
+            <Button variant="outline">
+              Export Transaction History
+            </Button>
+            <Button variant="outline">
+              Export Lock Data
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* About Section */}
+      <Card className="glass-card border-border">
+        <CardHeader>
+          <CardTitle>About FlashVault</CardTitle>
+          <CardDescription>
+            Version 1.0.0 - Built with React, TypeScript, and Tailwind CSS
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-sm text-muted-foreground space-y-2">
+            <p>FlashVault is a secure, non-custodial time-lock platform for managing cryptocurrency assets.</p>
+            <p>Built on Binance Smart Chain for fast, low-cost transactions.</p>
+            <p>Smart contracts audited by CertiK for maximum security.</p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -3,9 +3,10 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Dashboard } from '@/components/Dashboard';
 import { LockManagement } from '@/components/LockManagement';
 import { CreateLockForm } from '@/components/CreateLockForm';
+import { TransactionHistory } from '@/components/TransactionHistory';
 import { Settings } from '@/components/Settings';
 
-type ViewType = 'dashboard' | 'locks' | 'create' | 'settings';
+type ViewType = 'dashboard' | 'locks' | 'create' | 'transactions' | 'settings';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
@@ -18,6 +19,8 @@ const Index = () => {
         return <LockManagement />;
       case 'create':
         return <CreateLockForm />;
+      case 'transactions':
+        return <TransactionHistory />;
       case 'settings':
         return <Settings />;
       default:

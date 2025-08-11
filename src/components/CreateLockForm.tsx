@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
-import { Calendar, Wallet, Plus, ArrowRight } from 'lucide-react';
+import { Calendar, Wallet, Plus, ArrowRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarIcon } from 'lucide-react';
+import { useLocks } from '@/hooks/useLocks';
+import { useWallet } from '@/hooks/useWallet';
+import { APP_CONFIG } from '@/lib/constants';
 import { useToast } from '@/hooks/use-toast';
 
 export const CreateLockForm: React.FC = () => {
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { createLock, isLoading } = useLocks();
+  const { address, isConnected, usdtBalance } = useWallet();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
     try {
       // Simulate API call
@@ -37,26 +40,54 @@ export const CreateLockForm: React.FC = () => {
         description: "Please try again or contact support.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const isFormValid = amount && recipient && expiryDate;
+  const isFormValid = amount && recipient && expiryDate && isConnected;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground">Create New Lock</h2>
-        <p className="text-muted-foreground">Lock your USDT tokens with smart contract security</p>
+      {/* Enhanced Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-primary/10 to-purple-500/5 p-8 border border-primary/20">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+              <Plus className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Create New Lock
+              </h2>
+              <p className="text-lg text-muted-foreground mt-1">Secure • Fast • Professional USDT Time-Locking</p>
+            </div>
+          </div>
+          <p className="text-muted-foreground text-lg max-w-2xl">
+            Create a new time-locked USDT vault with enterprise-grade security. 
+            Set custom expiry dates and recipient addresses for maximum flexibility.
+          </p>
+          
+          {!isConnected && (
+            <div className="mt-6 p-4 bg-warning/10 border border-warning/20 rounded-xl">
+              <div className="flex items-center gap-3">
+                <Wallet className="h-5 w-5 text-warning" />
+                <p className="text-sm text-warning font-medium">
+                  Please connect your wallet to create a lock
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Form */}
-        <Card className="glass-card border-border">
+        {/* Enhanced Form */}
+        <Card className="glass-card border-border hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Plus className="h-5 w-5 text-primary" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
+                <Plus className="h-4 w-4 text-primary" />
+              </div>
               Lock Configuration
             </CardTitle>
             <CardDescription>
@@ -86,7 +117,7 @@ export const CreateLockForm: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Minimum: $100 USDT • Available: $50,000 USDT
+                  Minimum: ${APP_CONFIG.MIN_LOCK_AMOUNT} USDT • Available: ${parseFloat(usdtBalance || '0').toFixed(2)} USDT
                 </p>
               </div>
 
@@ -161,10 +192,15 @@ export const CreateLockForm: React.FC = () => {
 
         {/* Preview & Info */}
         <div className="space-y-6">
-          {/* Lock Preview */}
-          <Card className="glass-card border-border">
+          {/* Enhanced Lock Preview */}
+          <Card className="glass-card border-border hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
             <CardHeader>
-              <CardTitle className="text-lg">Lock Preview</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
+                  <Calendar className="h-3 w-3 text-primary" />
+                </div>
+                Lock Preview
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
@@ -198,10 +234,15 @@ export const CreateLockForm: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Security Features */}
-          <Card className="glass-card border-border">
+          {/* Enhanced Security Features */}
+          <Card className="glass-card border-border hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
             <CardHeader>
-              <CardTitle className="text-lg">Security Features</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-success/20 to-emerald-500/20 flex items-center justify-center">
+                  <Shield className="h-3 w-3 text-success" />
+                </div>
+                Security Features
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-3">
