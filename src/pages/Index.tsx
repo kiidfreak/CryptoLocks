@@ -1,13 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import React, { useState } from 'react';
+import { DashboardLayout } from '@/components/DashboardLayout';
+import { Dashboard } from '@/components/Dashboard';
+import { LockManagement } from '@/components/LockManagement';
+import { CreateLockForm } from '@/components/CreateLockForm';
+
+type ViewType = 'dashboard' | 'locks' | 'create' | 'settings';
 
 const Index = () => {
+  const [currentView, setCurrentView] = useState<ViewType>('dashboard');
+
+  const renderContent = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'locks':
+        return <LockManagement />;
+      case 'create':
+        return <CreateLockForm />;
+      case 'settings':
+        return <div className="text-center text-muted-foreground">Settings page coming soon...</div>;
+      default:
+        return <Dashboard />;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <DashboardLayout onViewChange={setCurrentView} currentView={currentView}>
+      {renderContent()}
+    </DashboardLayout>
   );
 };
 
