@@ -3,6 +3,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Dashboard } from '@/components/Dashboard';
 import { LockManagement } from '@/components/LockManagement';
 import { CreateLockForm } from '@/components/CreateLockForm';
+import { Settings } from '@/components/Settings';
 
 type ViewType = 'dashboard' | 'locks' | 'create' | 'settings';
 
@@ -18,7 +19,7 @@ const Index = () => {
       case 'create':
         return <CreateLockForm />;
       case 'settings':
-        return <div className="text-center text-muted-foreground">Settings page coming soon...</div>;
+        return <Settings />;
       default:
         return <Dashboard />;
     }

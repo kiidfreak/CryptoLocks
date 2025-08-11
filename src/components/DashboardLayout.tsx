@@ -11,6 +11,7 @@ import {
   Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -21,10 +22,23 @@ interface DashboardLayoutProps {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onViewChange, currentView = 'dashboard' }) => {
   const [isDark, setIsDark] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { toast } = useToast();
 
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle('dark');
+    toast({
+      title: "Theme Changed",
+      description: `Switched to ${!isDark ? 'dark' : 'light'} mode.`,
+    });
+  };
+
+  const handleConnectWallet = () => {
+    toast({
+      title: "Wallet Connection",
+      description: "Opening wallet connection dialog...",
+    });
+    // Add actual wallet connection logic here
   };
 
   const sidebarItems = [
@@ -58,7 +72,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
           </div>
 
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" className="hidden sm:flex">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="hidden sm:flex"
+              onClick={handleConnectWallet}
+            >
               <Wallet className="h-4 w-4 mr-2" />
               Connect Wallet
             </Button>

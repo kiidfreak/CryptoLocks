@@ -5,25 +5,41 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarIcon } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export const CreateLockForm: React.FC = () => {
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsLoading(false);
-    // Reset form
-    setAmount('');
-    setRecipient('');
-    setExpiryDate('');
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Lock Created Successfully!",
+        description: `Locked $${amount} USDT until ${new Date(expiryDate).toLocaleDateString()}`,
+      });
+      
+      // Reset form
+      setAmount('');
+      setRecipient('');
+      setExpiryDate('');
+    } catch (error) {
+      toast({
+        title: "Lock Creation Failed",
+        description: "Please try again or contact support.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isFormValid = amount && recipient && expiryDate;
