@@ -11,13 +11,15 @@ import {
   Wallet,
   Copy,
   ExternalLink,
-  Clock
+  Clock,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/hooks/useWallet';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { NETWORKS } from '@/lib/constants';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -58,6 +60,24 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
     }
   };
 
+  const handleCopyAddress = async () => {
+    if (address) {
+      try {
+        await navigator.clipboard.writeText(address);
+        toast({
+          title: "Address Copied!",
+          description: "Wallet address copied to clipboard.",
+        });
+      } catch (error) {
+        toast({
+          title: "Copy Failed",
+          description: "Failed to copy address to clipboard.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   const sidebarItems = [
     { icon: LayoutDashboard, label: 'Dashboard', view: 'dashboard' as const },
     { icon: Lock, label: 'Lock Management', view: 'locks' as const },
@@ -85,7 +105,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
               <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                 <Lock className="h-4 w-4 text-white" />
               </div>
-              <h1 className="text-xl font-bold text-gradient">FlashVault</h1>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                FlashVault
+              </h1>
             </div>
           </div>
 
@@ -114,13 +136,34 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
                     ${parseFloat(usdtBalance).toFixed(2)} USDT
                   </span>
                 </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={disconnect}
-                >
-                  {address?.slice(0, 6)}...{address?.slice(-4)}
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={handleCopyAddress}
+                        className="flex items-center gap-2 hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <Copy className="h-3 w-3" />
+                        {address?.slice(0, 6)}...{address?.slice(-4)}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Click to copy full address</p>
+                      <p className="font-mono text-xs mt-1">{address}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={disconnect}
+                    className="p-2 hover:bg-destructive hover:text-white transition-colors"
+                    title="Disconnect Wallet"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             )}
             

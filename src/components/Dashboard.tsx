@@ -7,7 +7,8 @@ import {
   Shield,
   Activity,
   BarChart3,
-  PieChart
+  PieChart,
+  Rocket
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -94,7 +95,11 @@ const portfolioDistribution = [
   { name: 'Expired', value: 10, color: 'bg-destructive' }
 ];
 
-export const Dashboard: React.FC = () => {
+interface DashboardProps {
+  onViewChange?: (view: 'create' | 'transactions' | 'transfer' | 'split') => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
   return (
     <div className="space-y-6">
       {/* Hero Header */}
@@ -117,16 +122,23 @@ export const Dashboard: React.FC = () => {
             Create, manage, and monitor your USDT locks with enterprise-grade security.
           </p>
           
-          <div className="flex gap-3 mt-6">
-            <Button variant="outline" className="gap-2 hover:bg-primary hover:text-white transition-colors">
-              <BarChart3 className="h-4 w-4" />
-              Analytics
-            </Button>
-            <Button className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-300 shadow-lg shadow-primary/25">
-              <Shield className="h-4 w-4" />
-              Create Lock
-            </Button>
-          </div>
+                     <div className="flex gap-3 mt-6">
+             <Button 
+               variant="outline" 
+               className="gap-2 hover:bg-primary hover:text-white transition-colors"
+               onClick={() => onViewChange?.('transactions')}
+             >
+               <BarChart3 className="h-4 w-4" />
+               Analytics
+             </Button>
+             <Button 
+               className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all duration-300 shadow-lg shadow-primary/25"
+               onClick={() => onViewChange?.('create')}
+             >
+               <Shield className="h-4 w-4" />
+               Create Lock
+             </Button>
+           </div>
         </div>
       </div>
 
@@ -249,9 +261,13 @@ export const Dashboard: React.FC = () => {
             </div>
             
             <div className="pt-4 border-t border-border/50">
-              <Button variant="outline" className="w-full mt-2 hover:bg-primary hover:text-white transition-colors">
-                View All Activity
-              </Button>
+                           <Button 
+               variant="outline" 
+               className="w-full mt-2 hover:bg-primary hover:text-white transition-colors"
+               onClick={() => onViewChange?.('transactions')}
+             >
+               View All Activity
+             </Button>
             </div>
           </CardContent>
         </Card>
@@ -270,33 +286,184 @@ export const Dashboard: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <Button variant="outline" className="group h-24 flex-col gap-3 hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-primary">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                <Shield className="h-5 w-5 text-primary group-hover:text-white" />
-              </div>
-              <span className="text-sm font-medium">Create Lock</span>
-            </Button>
+                         <Button 
+               variant="outline" 
+               className="group h-24 flex-col gap-3 hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-primary"
+               onClick={() => onViewChange?.('create')}
+             >
+               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                 <Shield className="h-5 w-5 text-primary group-hover:text-white" />
+               </div>
+               <span className="text-sm font-medium">Create Lock</span>
+             </Button>
             
-            <Button variant="outline" className="group h-24 flex-col gap-3 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-blue-600">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                <Activity className="h-5 w-5 text-blue-600 group-hover:text-white" />
-              </div>
-              <span className="text-sm font-medium">Transfer Lock</span>
-            </Button>
+                         <Button 
+               variant="outline" 
+               className="group h-24 flex-col gap-3 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-blue-600"
+               onClick={() => onViewChange?.('transfer')}
+             >
+               <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                 <Activity className="h-5 w-5 text-blue-600 group-hover:text-white" />
+               </div>
+               <span className="text-sm font-medium">Transfer Lock</span>
+             </Button>
             
-            <Button variant="outline" className="group h-24 flex-col gap-3 hover:bg-purple-600 hover:text-white hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-purple-600">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                <PieChart className="h-5 w-5 text-purple-600 group-hover:text-white" />
-              </div>
-              <span className="text-sm font-medium">Split Lock</span>
-            </Button>
+                         <Button 
+               variant="outline" 
+               className="group h-24 flex-col gap-3 hover:bg-purple-600 hover:text-white hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-purple-600"
+               onClick={() => onViewChange?.('split')}
+             >
+               <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                 <PieChart className="h-5 w-5 text-purple-600 group-hover:text-white" />
+               </div>
+               <span className="text-sm font-medium">Split Lock</span>
+             </Button>
             
-            <Button variant="outline" className="group h-24 flex-col gap-3 hover:bg-success hover:text-white hover:shadow-lg hover:shadow-success/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-success">
-              <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                <TrendingUp className="h-5 w-5 text-success group-hover:text-white" />
+                         <Button 
+               variant="outline" 
+               className="group h-24 flex-col gap-3 hover:bg-success hover:text-white hover:shadow-lg hover:shadow-success/25 transition-all duration-300 hover:-translate-y-1 border-2 border-border hover:border-success"
+               onClick={() => onViewChange?.('transactions')}
+             >
+               <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                 <TrendingUp className="h-5 w-5 text-success group-hover:text-white" />
+               </div>
+               <span className="text-sm font-medium">View Analytics</span>
+             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Contract Deployment Section */}
+      <Card className="glass-card border-border hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+              <Rocket className="h-4 w-4 text-blue-500" />
+            </div>
+            Contract Deployment
+          </CardTitle>
+          <CardDescription>Deploy FlashVault Bridge System contracts</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Deploy the complete FlashVault system including the bridged USDT token, cross-chain bridge, and time-lock manager.
+            </p>
+            
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-green-50 to-blue-50">
+                <h4 className="font-semibold text-green-800 mb-2">TetherUSDBridgedZED20</h4>
+                <p className="text-xs text-green-700">Bridged USDT token with 6 decimals</p>
+                <Badge className="mt-2 bg-green-100 text-green-800">Token Contract</Badge>
               </div>
-              <span className="text-sm font-medium">View Analytics</span>
-            </Button>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-blue-50 to-purple-50">
+                <h4 className="font-semibold text-blue-800 mb-2">TokenBridge</h4>
+                <p className="text-xs text-blue-700">Cross-chain bridge for asset transfers</p>
+                <Badge className="mt-2 bg-blue-100 text-blue-800">Bridge Contract</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-purple-50 to-pink-50">
+                <h4 className="font-semibold text-purple-800 mb-2">LockManager</h4>
+                <p className="text-xs text-purple-700">Time-lock system for secure asset management</p>
+                <Badge className="mt-2 bg-purple-100 text-purple-800">Lock Manager</Badge>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <Button 
+                variant="outline" 
+                className="flex-1 hover:bg-blue-500 hover:text-white transition-colors"
+                onClick={() => window.open('/deploy', '_blank')}
+              >
+                <Rocket className="h-4 w-4 mr-2" />
+                Deploy Contracts
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => window.open('https://testnet.bscscan.com', '_blank')}
+              >
+                View on Explorer
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Enhanced Features Section */}
+      <Card className="glass-card border-border hover:shadow-lg hover:shadow-green-500/10 transition-all duration-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+              <BarChart3 className="h-4 w-4 text-green-500" />
+            </div>
+            Enhanced Token Features
+            <Badge variant="secondary" className="ml-2">New</Badge>
+          </CardTitle>
+          <CardDescription>Advanced token management tools and analytics</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Access powerful new features including batch transfers, time-lock management, automated distributions, and comprehensive analytics.
+            </p>
+            
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-green-50 to-emerald-50">
+                <h4 className="font-semibold text-green-800 mb-2">💸 Send Tokens</h4>
+                <p className="text-xs text-green-700">Standard & batch transfers</p>
+                <Badge className="mt-2 bg-green-100 text-green-800">Transfer</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50">
+                <h4 className="font-semibold text-blue-800 mb-2">🔒 Timelock Manager</h4>
+                <p className="text-xs text-blue-700">Time-locked tokens & vesting</p>
+                <Badge className="mt-2 bg-blue-100 text-blue-800">Timelock</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-purple-50 to-pink-50">
+                <h4 className="font-semibold text-purple-800 mb-2">✂️ Splitter Manager</h4>
+                <p className="text-xs text-purple-700">Automated distributions</p>
+                <Badge className="mt-2 bg-purple-100 text-purple-800">Distribution</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-orange-50 to-red-50">
+                <h4 className="font-semibold text-orange-800 mb-2">🪙 Mint/Burn Tools</h4>
+                <p className="text-xs text-orange-700">Supply management</p>
+                <Badge className="mt-2 bg-orange-100 text-orange-800">Supply</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-indigo-50 to-purple-50">
+                <h4 className="font-semibold text-indigo-800 mb-2">📊 Token Stats</h4>
+                <p className="text-xs text-indigo-700">Holder analytics</p>
+                <Badge className="mt-2 bg-indigo-100 text-indigo-800">Analytics</Badge>
+              </div>
+              
+              <div className="p-4 border rounded-lg bg-gradient-to-br from-pink-50 to-rose-50">
+                <h4 className="font-semibold text-pink-800 mb-2">📰 Activity Feed</h4>
+                <p className="text-xs text-pink-700">Real-time tracking</p>
+                <Badge className="mt-2 bg-pink-100 text-pink-800">Tracking</Badge>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <Button 
+                variant="outline" 
+                className="flex-1 hover:bg-green-500 hover:text-white transition-colors"
+                onClick={() => window.open('/enhanced', '_blank')}
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Access Enhanced Features
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => window.open('/enhanced', '_blank')}
+              >
+                View Demo
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

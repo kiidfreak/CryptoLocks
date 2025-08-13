@@ -1,239 +1,335 @@
-# 🚀 FlashVault - Crypto Time-Lock Management Platform
+# FlashVault 🚀
 
-**FlashVault** is a fully functional, enterprise-ready DeFi application for managing cryptocurrency time-locks with smart contract security. Built on Binance Smart Chain (BSC) with a modern React frontend and comprehensive blockchain integration.
+**Professional USDT Time-Lock Management System on Binance Smart Chain**
 
-![FlashVault Dashboard](public/flashvault-og.png)
+FlashVault is a comprehensive, enterprise-grade platform for managing time-locked USDT tokens with advanced features including lock creation, transfer, splitting, and portfolio analytics.
 
-## ✨ **Features**
+## 🌟 Features
 
-### 🔐 **Wallet Integration**
-- **MetaMask Support** - Seamless wallet connection
-- **Multi-Network** - BSC Testnet & Mainnet support
-- **Real-time Balances** - Live BNB and USDT balance updates
-- **Network Switching** - Automatic network detection and switching
-- **Address Management** - Secure wallet address handling
+### 🔒 Core Lock Management
+- **Time-Locked USDT**: Secure token locking with configurable durations
+- **Lock Transfer**: Change lock ownership to new recipients
+- **Lock Splitting**: Divide large locks into multiple smaller ones
+- **Lock Redemption**: Claim locked tokens after unlock time
+- **Portfolio Tracking**: Comprehensive lock management dashboard
 
-### 🔒 **Lock Management System**
-- **Create Time-Locks** - Lock USDT tokens with smart contract security
-- **Lock Operations** - Transfer, split, and redeem locks
-- **Real-time Status** - Live lock status updates (Active/Expiring/Expired/Redeemed)
-- **Advanced Filtering** - Search and sort locks by various criteria
-- **Bulk Operations** - Manage multiple locks efficiently
+### 🏗️ Architecture
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Smart Contracts**: Solidity on BSC with OpenZeppelin security
+- **Backend API**: Node.js + Express with blockchain integration
+- **Database**: PostgreSQL for user data and analytics
+- **Blockchain**: Binance Smart Chain (BSC) Testnet/Mainnet
 
-### 📊 **Dashboard & Analytics**
-- **Portfolio Overview** - Total value locked and performance metrics
-- **Real-time Statistics** - Live data with trend indicators
-- **Transaction History** - Complete audit trail of all operations
-- **Performance Tracking** - 30-day portfolio performance
-- **Lock Distribution** - Visual breakdown of lock statuses
+### 🔐 Security Features
+- **Non-custodial**: Users maintain full control of funds
+- **Smart Contract Security**: OpenZeppelin audited contracts
+- **Reentrancy Protection**: Advanced security measures
+- **Input Validation**: Comprehensive parameter checks
+- **Event Logging**: Full audit trail on blockchain
 
-### 🎨 **Modern UI/UX**
-- **Glass Morphism Design** - Beautiful translucent card designs
-- **Responsive Layout** - Mobile-first design for all devices
-- **Dark/Light Theme** - Smooth theme switching
-- **Hover Animations** - Smooth micro-interactions
-- **Professional Fintech Aesthetic** - Enterprise-grade design
+## 🚀 Quick Start
 
-### 🔧 **Technical Features**
-- **TypeScript** - Full type safety throughout
-- **React 18** - Latest React features and hooks
-- **Ethers.js** - Complete blockchain integration
-- **Smart Contract Ready** - Ready for mainnet deployment
-- **Performance Optimized** - Efficient rendering and state management
+### Prerequisites
+- Node.js 16+ and npm
+- MetaMask wallet with BSC network
+- BSC testnet tokens (tBNB and tUSDT)
 
-## 🛠 **Tech Stack**
-
-- **Frontend**: React 18 + TypeScript + Vite
-- **UI Framework**: shadcn/ui + Radix UI primitives
-- **Styling**: Tailwind CSS + Custom design system
-- **Blockchain**: Ethers.js + BSC integration
-- **State Management**: React Query + Custom hooks
-- **Routing**: React Router v6
-- **Forms**: React Hook Form + Zod validation
-- **Notifications**: Sonner + Custom toast system
-
-## 🚀 **Getting Started**
-
-### **Prerequisites**
-- Node.js 18+ and npm
-- MetaMask browser extension
-- BSC Testnet USDT (for testing)
-
-### **Installation**
-
-1. **Clone the repository**
+### Frontend Development
 ```bash
-git clone https://github.com/kiidfreak/crypto-lock-manager.git
-cd crypto-lock-manager
-```
-
-2. **Install dependencies**
-```bash
+# Install dependencies
 npm install
-```
 
-3. **Start development server**
-```bash
+# Start development server
 npm run dev
-```
 
-4. **Open your browser**
-Navigate to `http://localhost:5173`
-
-### **Wallet Setup**
-
-1. **Install MetaMask** from [metamask.io](https://metamask.io)
-2. **Add BSC Testnet** to MetaMask:
-   - Network Name: `BSC Testnet`
-   - RPC URL: `https://data-seed-prebsc-1-s1.binance.org:8545/`
-   - Chain ID: `97`
-   - Currency Symbol: `tBNB`
-   - Block Explorer: `https://testnet.bscscan.com`
-
-3. **Get Testnet USDT** from BSC Testnet faucet
-4. **Connect Wallet** in FlashVault
-
-## 📱 **Usage Guide**
-
-### **Creating a Lock**
-1. Connect your wallet
-2. Navigate to "Create Lock"
-3. Enter USDT amount (min: $100)
-4. Set recipient address
-5. Choose unlock date
-6. Confirm transaction
-
-### **Managing Locks**
-1. View all locks in "Lock Management"
-2. Filter by status, amount, or recipient
-3. Transfer locks to new addresses
-4. Split locks into multiple amounts
-5. Redeem expired locks
-
-### **Monitoring Portfolio**
-1. Dashboard shows real-time statistics
-2. Track total value locked
-3. Monitor lock performance
-4. View recent activity
-5. Export transaction history
-
-## 🔧 **Configuration**
-
-### **Environment Variables**
-```bash
-# Network Configuration
-VITE_BSC_TESTNET_RPC=https://data-seed-prebsc-1-s1.binance.org:8545/
-VITE_BSC_MAINNET_RPC=https://bsc-dataseed.binance.org/
-VITE_CONTRACT_ADDRESS=0x... # Your deployed contract address
-```
-
-### **Smart Contract Deployment**
-The application is ready for smart contract deployment. Update the contract addresses in `src/lib/constants.ts`:
-
-```typescript
-export const CONTRACTS = {
-  USDT: '0x...', // Your USDT contract address
-  LOCK_MANAGER: '0x...', // Your deployed lock manager
-  MULTICALL: '0x...' // Multicall contract for batch operations
-};
-```
-
-## 🏗 **Architecture**
-
-### **Component Structure**
-```
-src/
-├── components/          # UI Components
-│   ├── Dashboard.tsx   # Main dashboard
-│   ├── CreateLockForm.tsx # Lock creation
-│   ├── LockManagement.tsx # Lock management
-│   ├── TransactionHistory.tsx # Transaction tracking
-│   └── ui/            # shadcn/ui components
-├── hooks/              # Custom React hooks
-│   ├── useWallet.ts   # Wallet management
-│   └── useLocks.ts    # Lock operations
-├── lib/                # Core services
-│   ├── wallet.ts      # Wallet service
-│   ├── locks.ts       # Lock management service
-│   └── constants.ts   # App constants
-└── pages/              # Page components
-```
-
-### **State Management**
-- **Wallet State** - Managed by `useWallet` hook
-- **Lock State** - Managed by `useLocks` hook
-- **UI State** - Local component state
-- **Global State** - React Context for theme/global settings
-
-## 🔒 **Security Features**
-
-- **Non-custodial** - Users maintain control of funds
-- **Smart Contract Audited** - Ready for CertiK audit
-- **Immutable Locks** - Blockchain-enforced time locks
-- **Secure Transactions** - Proper gas estimation and validation
-- **Address Validation** - Input sanitization and validation
-
-## 🚀 **Deployment**
-
-### **Build for Production**
-```bash
+# Build for production
 npm run build
 ```
 
-### **Deploy to Vercel/Netlify**
-1. Connect your repository
-2. Set build command: `npm run build`
-3. Set output directory: `dist`
-4. Deploy!
+### Smart Contract Development
+```bash
+cd contracts
 
-### **Smart Contract Deployment**
-1. Deploy LockManager contract to BSC
-2. Update contract addresses in constants
-3. Verify contracts on BSCScan
-4. Update frontend configuration
+# Install dependencies
+npm install
 
-## 📈 **Roadmap**
+# Compile contracts
+npm run compile
 
-### **Phase 2: Advanced Features**
-- [ ] Multi-chain support (Ethereum, Polygon)
-- [ ] Lock templates and presets
-- [ ] Advanced analytics and reporting
-- [ ] Mobile app development
-- [ ] API access for developers
+# Deploy to BSC Testnet
+npm run deploy:testnet
+```
 
-### **Phase 3: Enterprise Features**
-- [ ] Team management and permissions
-- [ ] Compliance and KYC integration
-- [ ] White-label solutions
-- [ ] Advanced security features
-- [ ] Institutional tools
+### Backend API
+```bash
+cd backend
 
-## 🤝 **Contributing**
+# Install dependencies
+npm install
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+# Start development server
+npm run dev
 
-## 📄 **License**
+# Start production server
+npm start
+```
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 📁 Project Structure
 
-## 🆘 **Support**
+```
+flashvault/
+├── src/                    # Frontend React application
+│   ├── components/        # UI components
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utilities and constants
+│   └── pages/            # Application pages
+├── contracts/             # Smart contract development
+│   ├── LockManager.sol   # Main contract
+│   ├── scripts/          # Deployment scripts
+│   └── hardhat.config.js # Hardhat configuration
+├── backend/               # Backend API server
+│   ├── server.js         # Express server
+│   └── package.json      # Backend dependencies
+└── README.md              # Project documentation
+```
 
-- **Documentation**: [docs.flashvault.com](https://docs.flashvault.com)
-- **Discord**: [Join our community](https://discord.gg/flashvault)
-- **Email**: support@flashvault.com
-- **Issues**: [GitHub Issues](https://github.com/kiidfreak/crypto-lock-manager/issues)
+## 🔧 Configuration
 
-## 🙏 **Acknowledgments**
+### Environment Variables
+Create `.env` files in each directory:
 
-- Built with [shadcn/ui](https://ui.shadcn.com/)
-- Powered by [Binance Smart Chain](https://www.bnbchain.org/)
-- Icons by [Lucide React](https://lucide.dev/)
-- Charts by [Recharts](https://recharts.org/)
+**Frontend (.env)**
+```bash
+VITE_CONTRACT_ADDRESS=your_deployed_contract_address
+VITE_NETWORK=bscTestnet
+```
+
+**Contracts (.env)**
+```bash
+PRIVATE_KEY=your_deployer_private_key
+BSCSCAN_API_KEY=your_bscscan_api_key
+```
+
+**Backend (.env)**
+```bash
+PORT=3001
+FRONTEND_URL=http://localhost:5173
+CURRENT_NETWORK=bscTestnet
+```
+
+## 🌐 Networks
+
+### BSC Testnet (Chain ID: 97)
+- **RPC**: https://data-seed-prebsc-1-s1.binance.org:8545/
+- **USDT**: 0x337610d27c682E347C9cD60BD4b3b107C9d34dDd
+- **Explorer**: https://testnet.bscscan.com/
+
+### BSC Mainnet (Chain ID: 56)
+- **RPC**: https://bsc-dataseed.binance.org/
+- **USDT**: 0x55d398326f99059fF775485246999027B3197955
+- **Explorer**: https://bscscan.com/
+
+## 📊 Smart Contract Features
+
+### Lock Configuration
+- **Min Amount**: 100 USDT
+- **Max Amount**: 1,000,000 USDT
+- **Min Duration**: 1 day
+- **Max Duration**: 365 days
+- **Platform Fee**: 0.25%
+
+### Core Functions
+- `createLock(recipient, amount, unlockTime)` - Create new lock
+- `redeemLock(lockId)` - Redeem unlocked tokens
+- `transferLock(lockId, newRecipient)` - Transfer ownership
+- `splitLock(lockId, recipients, amounts)` - Split lock
+- `getUserLocks(user)` - Get user's locks
+- `getContractStats()` - Get contract statistics
+
+## 🔗 API Endpoints
+
+### Health & Network
+- `GET /api/health` - Server status
+- `GET /api/networks` - Available networks
+
+### Lock Management
+- `GET /api/locks/:lockId` - Lock information
+- `GET /api/users/:address/locks` - User's locks
+- `GET /api/contract/:address/stats` - Contract stats
+
+### Analytics
+- `GET /api/users/:address/analytics` - Portfolio analytics
+
+## 🧪 Testing
+
+### Frontend Testing
+```bash
+npm run test
+npm run test:coverage
+```
+
+### Smart Contract Testing
+```bash
+cd contracts
+npm test
+```
+
+### Backend Testing
+```bash
+cd backend
+npm test
+```
+
+### Manual Testing
+1. Start frontend: `npm run dev`
+2. Start backend: `cd backend && npm run dev`
+3. Deploy contracts: `cd contracts && npm run deploy:testnet`
+4. Test wallet connection and lock operations
+
+## 🚀 Deployment
+
+### Smart Contracts
+```bash
+cd contracts
+
+# Deploy to testnet
+npm run deploy:testnet
+
+# Deploy to mainnet
+npm run deploy:mainnet
+
+# Verify on BSCScan
+npm run verify:testnet
+```
+
+### Frontend
+```bash
+# Build for production
+npm run build
+
+# Deploy to Vercel/Netlify
+# Upload dist/ folder contents
+```
+
+### Backend
+```bash
+cd backend
+
+# Production build
+npm start
+
+# Environment variables
+NODE_ENV=production
+PORT=3001
+FRONTEND_URL=https://yourdomain.com
+```
+
+## 🔐 Security Considerations
+
+### Smart Contract Security
+- **Audit**: Consider professional audit before mainnet
+- **Timelock**: Implement timelock for admin functions
+- **Upgradeable**: Consider upgradeable pattern for mainnet
+- **Emergency Pause**: Add pause mechanism for critical issues
+
+### Backend Security
+- **Rate Limiting**: API abuse prevention
+- **Input Validation**: Comprehensive parameter checking
+- **CORS**: Configured cross-origin policies
+- **Helmet**: Security headers and protection
+
+## 📈 Performance Optimization
+
+### Frontend
+- **Lazy Loading**: Component and route lazy loading
+- **Code Splitting**: Dynamic imports for better performance
+- **Image Optimization**: Optimized assets and SVGs
+- **Caching**: Efficient data caching strategies
+
+### Smart Contracts
+- **Gas Optimization**: Efficient storage and operations
+- **Batch Operations**: Multi-lock operations
+- **Event Optimization**: Minimal event data
+- **Storage Layout**: Optimized data structures
+
+### Backend
+- **Caching**: Smart contract data caching
+- **Compression**: Response compression
+- **Connection Pooling**: Database optimization
+- **Rate Limiting**: API performance protection
+
+## 🔄 Development Workflow
+
+### 1. Smart Contract Development
+1. Write and test contracts locally
+2. Deploy to BSC Testnet
+3. Test all functions thoroughly
+4. Deploy to BSC Mainnet
+5. Verify on BSCScan
+
+### 2. Backend API Development
+1. Implement API endpoints
+2. Add blockchain integration
+3. Test with deployed contracts
+4. Add error handling and validation
+5. Performance optimization
+
+### 3. Frontend Integration
+1. Replace mock data with real API calls
+2. Integrate smart contract functions
+3. Add real-time updates
+4. Error handling and user feedback
+5. Performance optimization
+
+## 🚨 Emergency Procedures
+
+### Smart Contract Issues
+1. **Pause Function**: Implement emergency pause
+2. **Timelock**: Admin function delays
+3. **Emergency Withdraw**: Owner-only emergency functions
+4. **Upgrade Path**: Upgradeable contract pattern
+
+### Backend Issues
+1. **Health Checks**: Monitor API health
+2. **Rate Limiting**: Prevent abuse
+3. **Error Logging**: Comprehensive error tracking
+4. **Backup Systems**: Data backup and recovery
+
+## 📞 Support & Community
+
+### Documentation
+- **Smart Contracts**: Check contracts/README.md
+- **Backend API**: Check backend/README.md
+- **Frontend**: Check src/ components and hooks
+
+### Issues & Questions
+- **GitHub Issues**: Report bugs and feature requests
+- **Code Comments**: Inline documentation in code
+- **API Testing**: Use provided test endpoints
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **OpenZeppelin**: Security-focused smart contract library
+- **Hardhat**: Ethereum development environment
+- **BSC Community**: Binance Smart Chain ecosystem
+- **React Community**: Frontend framework and tools
 
 ---
 
-**FlashVault** - Secure, transparent, and efficient crypto time-lock management. 🚀
+## 🎯 Next Steps
+
+1. **Deploy Smart Contracts** to BSC Testnet
+2. **Test All Functions** thoroughly
+3. **Integrate Backend API** with frontend
+4. **Replace Mock Data** with real blockchain calls
+5. **Deploy to Production** on BSC Mainnet
+
+**🚀 Ready to revolutionize USDT time-lock management!**
+
+---
+
+*FlashVault - Secure • Fast • Professional Crypto Asset Management*
