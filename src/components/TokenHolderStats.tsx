@@ -250,7 +250,7 @@ export default function TokenHolderStats({
                     <div className="text-sm font-semibold mb-2">Holder Distribution</div>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Whales (>1%)</span>
+                        <span>Whales (&gt;1%)</span>
                         <span className="font-mono">{holderDistribution.whales}</span>
                       </div>
                       <div className="flex justify-between text-sm">
@@ -262,7 +262,7 @@ export default function TokenHolderStats({
                         <span className="font-mono">{holderDistribution.medium}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Small (<0.01%)</span>
+                        <span>Small (&lt;0.01%)</span>
                         <span className="font-mono">{holderDistribution.small}</span>
                       </div>
                     </div>

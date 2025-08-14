@@ -260,3 +260,5 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
     </div>
   );
 };
+
+export default DashboardLayout;

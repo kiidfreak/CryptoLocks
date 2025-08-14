@@ -74,7 +74,7 @@ export const DeploymentConfig: React.FC<DeploymentConfigProps> = ({ onConfigChan
         <CardTitle className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
             <Settings className="h-4 w-4 text-blue-500" />
-          </CardTitle>
+          </div>
           Deployment Configuration
         </CardTitle>
         <CardDescription>
