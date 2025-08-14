@@ -12,7 +12,8 @@ import {
   Copy,
   ExternalLink,
   Clock,
-  LogOut
+  LogOut,
+  Rocket
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/hooks/useWallet';
@@ -23,7 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  onViewChange?: (view: 'dashboard' | 'locks' | 'create' | 'transactions' | 'settings') => void;
+  onViewChange?: (view: 'dashboard' | 'locks' | 'create' | 'transactions' | 'deploy' | 'settings' | 'send') => void;
   currentView?: string;
 }
 
@@ -83,6 +84,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onVi
     { icon: Lock, label: 'Lock Management', view: 'locks' as const },
     { icon: Plus, label: 'Create Lock', view: 'create' as const },
     { icon: Clock, label: 'Transactions', view: 'transactions' as const },
+    { icon: Rocket, label: 'Deploy', view: 'deploy' as const },
     { icon: Settings, label: 'Settings', view: 'settings' as const },
   ];
 

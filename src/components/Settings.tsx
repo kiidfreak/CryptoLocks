@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, Network, Shield, Bell, Palette, Download } from 'lucide-react';
+import { Settings as SettingsIcon, Network, Shield, Bell, Palette, Download, Lock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -171,6 +171,76 @@ export const Settings: React.FC = () => {
                 <span className="text-sm">Require 2FA for large amounts</span>
                 <Switch defaultChecked />
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Timelock & Lock Management */}
+        <Card className="glass-card border-border">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-primary" />
+              Timelock & Lock Management
+            </CardTitle>
+            <CardDescription>
+              Configure advanced lock management features
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Default Lock Duration</Label>
+              <Select defaultValue="180">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duration" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">30 days</SelectItem>
+                  <SelectItem value="90">90 days</SelectItem>
+                  <SelectItem value="180">180 days</SelectItem>
+                  <SelectItem value="365">365 days</SelectItem>
+                  <SelectItem value="custom">Custom</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Default duration for new time locks
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Vesting Schedule</Label>
+              <Select defaultValue="linear">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select schedule" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="linear">Linear (equal monthly)</SelectItem>
+                  <SelectItem value="cliff">Cliff (all at once)</SelectItem>
+                  <SelectItem value="custom">Custom schedule</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Default vesting schedule for new locks
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Auto-extend Locks</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically extend locks before expiry
+                </p>
+              </div>
+              <Switch defaultChecked />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Lock Transfer Enabled</Label>
+                <p className="text-sm text-muted-foreground">
+                  Allow transferring locked tokens
+                </p>
+              </div>
+              <Switch defaultChecked />
             </div>
           </CardContent>
         </Card>

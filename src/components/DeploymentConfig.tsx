@@ -24,7 +24,7 @@ const NETWORKS: NetworkConfig[] = [
     chainId: 97,
     currency: 'tBNB',
     estimatedCost: '0.005 BNB',
-    rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    rpcUrl: 'https://bsc-testnet.publicnode.com',
     explorer: 'https://testnet.bscscan.com'
   },
   {
@@ -37,13 +37,22 @@ const NETWORKS: NetworkConfig[] = [
     explorer: 'https://bscscan.com'
   },
   {
-    id: 'bnb-testnet',
-    name: 'BNB Testnet',
-    chainId: 97,
-    currency: 'tBNB',
-    estimatedCost: '0.005 BNB',
-    rpcUrl: 'https://bsc-testnet.publicnode.com',
-    explorer: 'https://testnet.bscscan.com'
+    id: 'polygon-testnet',
+    name: 'Polygon Mumbai',
+    chainId: 80001,
+    currency: 'MATIC',
+    estimatedCost: '0.01 MATIC',
+    rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+    explorer: 'https://mumbai.polygonscan.com'
+  },
+  {
+    id: 'ethereum-sepolia',
+    name: 'Ethereum Sepolia',
+    chainId: 11155111,
+    currency: 'ETH',
+    estimatedCost: '0.001 ETH',
+    rpcUrl: 'https://rpc.sepolia.org',
+    explorer: 'https://sepolia.etherscan.io'
   }
 ];
 
@@ -52,18 +61,24 @@ interface DeploymentConfigProps {
 }
 
 export const DeploymentConfig: React.FC<DeploymentConfigProps> = ({ onConfigChange }) => {
-  const [selectedNetwork, setSelectedNetwork] = useState('bnb-testnet');
+  console.log('DeploymentConfig rendered with onConfigChange:', onConfigChange);
+  const [selectedNetwork, setSelectedNetwork] = useState('bsc-testnet');
   const [gasPrice, setGasPrice] = useState('5000000000'); // 5 Gwei
   const [gasLimit, setGasLimit] = useState('3000000');
 
   const handleConfigChange = () => {
-    const config = {
-      network: selectedNetwork,
-      gasPrice,
-      gasLimit: parseInt(gasLimit),
-      networkInfo: NETWORKS.find(n => n.id === selectedNetwork)
-    };
-    onConfigChange(config);
+    try {
+      const config = {
+        network: selectedNetwork,
+        gasPrice,
+        gasLimit: parseInt(gasLimit),
+        networkInfo: NETWORKS.find(n => n.id === selectedNetwork)
+      };
+      console.log('Applying configuration:', config);
+      onConfigChange(config);
+    } catch (error) {
+      console.error('Error applying configuration:', error);
+    }
   };
 
   const selectedNetworkInfo = NETWORKS.find(n => n.id === selectedNetwork);
@@ -85,6 +100,18 @@ export const DeploymentConfig: React.FC<DeploymentConfigProps> = ({ onConfigChan
         {/* Network Selection */}
         <div className="space-y-3">
           <Label htmlFor="network">Target Network</Label>
+          <p className="text-xs text-muted-foreground">
+            Choose the blockchain network where you want to deploy your contracts
+          </p>
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex items-start gap-2">
+              <div className="text-amber-600 mt-0.5">💡</div>
+              <div className="text-xs text-amber-800">
+                <strong>Recommendation:</strong> Start with <strong>BSC Testnet</strong> for development and testing. 
+                It's free, fast, and perfect for learning. Switch to mainnet only when ready for production.
+              </div>
+            </div>
+          </div>
           <Select value={selectedNetwork} onValueChange={setSelectedNetwork}>
             <SelectTrigger>
               <SelectValue placeholder="Select a network" />
@@ -94,8 +121,11 @@ export const DeploymentConfig: React.FC<DeploymentConfigProps> = ({ onConfigChan
                 <SelectItem key={network.id} value={network.id}>
                   <div className="flex items-center gap-2">
                     <Network className="h-4 w-4" />
-                    {network.name}
-                    <Badge variant="outline" className="text-xs">
+                    <div className="flex flex-col">
+                      <span className="font-medium">{network.name}</span>
+                      <span className="text-xs text-muted-foreground">Chain ID: {network.chainId}</span>
+                    </div>
+                    <Badge variant="outline" className="text-xs ml-auto">
                       {network.currency}
                     </Badge>
                   </div>
@@ -191,12 +221,21 @@ export const DeploymentConfig: React.FC<DeploymentConfigProps> = ({ onConfigChan
                 </a>
               </div>
             </div>
+            <div className="mt-3 p-2 bg-blue-100 rounded text-xs text-blue-800">
+              <strong>💡 Tip:</strong> {selectedNetworkInfo.id.includes('testnet') ? 
+                'Use testnets for development and testing. Get free test tokens from faucets.' : 
+                'Mainnet deployment requires real tokens and incurs actual gas costs.'
+              }
+            </div>
           </div>
         )}
 
         {/* Apply Configuration */}
         <Button 
-          onClick={handleConfigChange}
+          onClick={(e) => {
+            console.log('Button clicked!', e);
+            handleConfigChange();
+          }}
           className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
         >
           <Zap className="h-4 w-4 mr-2" />

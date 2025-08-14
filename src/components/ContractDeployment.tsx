@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Rocket, CheckCircle, AlertCircle, Loader2, Download, Play } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Rocket, CheckCircle, AlertCircle, Loader2, Download, Play, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +25,10 @@ export const ContractDeployment: React.FC = () => {
   const [deploymentConfig, setDeploymentConfig] = useState<any>(null);
   const { address, isConnected } = useWallet();
   const { toast } = useToast();
+
+  useEffect(() => {
+    console.log('Deployment config changed:', deploymentConfig);
+  }, [deploymentConfig]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -106,7 +110,10 @@ export const ContractDeployment: React.FC = () => {
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Deployment Configuration */}
-        <DeploymentConfig onConfigChange={setDeploymentConfig} />
+        <DeploymentConfig onConfigChange={(config) => {
+          console.log('Configuration received:', config);
+          setDeploymentConfig(config);
+        }} />
         
         {/* Deployment Control */}
         <Card className="glass-card border-border hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
@@ -136,7 +143,7 @@ export const ContractDeployment: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <AlertCircle className="h-5 w-5 text-info" />
                   <p className="text-sm text-info font-medium">
-                    Please configure deployment settings first
+                    Please configure deployment settings first (Current config: {JSON.stringify(deploymentConfig)})
                   </p>
                 </div>
               </div>
@@ -258,19 +265,43 @@ export const ContractDeployment: React.FC = () => {
               {deploymentResult.token && (
                 <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                   <span className="font-medium">Token Contract:</span>
-                  <code className="text-sm bg-green-100 px-2 py-1 rounded">{deploymentResult.token}</code>
+                  <a 
+                    href={`${deploymentConfig?.networkInfo?.explorer}/address/${deploymentResult.token}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm bg-green-100 px-2 py-1 rounded hover:bg-green-200 transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    {deploymentResult.token}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                 </div>
               )}
               {deploymentResult.bridge && (
                 <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <span className="font-medium">Bridge Contract:</span>
-                  <code className="text-sm bg-blue-100 px-2 py-1 rounded">{deploymentResult.bridge}</code>
+                  <a 
+                    href={`${deploymentConfig?.networkInfo?.explorer}/address/${deploymentResult.bridge}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm bg-blue-100 px-2 py-1 rounded hover:bg-blue-200 transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    {deploymentResult.bridge}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                 </div>
               )}
               {deploymentResult.lockManager && (
                 <div className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-lg">
                   <span className="font-medium">LockManager Contract:</span>
-                  <code className="text-sm bg-purple-100 px-2 py-1 rounded">{deploymentResult.lockManager}</code>
+                  <a 
+                    href={`${deploymentConfig?.networkInfo?.explorer}/address/${deploymentResult.lockManager}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm bg-purple-100 px-2 py-1 rounded hover:bg-purple-200 transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    {deploymentResult.lockManager}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                 </div>
               )}
             </div>
